@@ -63,8 +63,8 @@ body{background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);min-
 .sphoto-wrap{position:relative;overflow:hidden;height:160px;background:var(--bg);}
 .sphoto-img{width:100%;height:100%;object-fit:cover;transition:transform .4s ease;}
 .sc:hover .sphoto-img{transform:scale(1.04);}
-.sphoto-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(30,24,18,0.55));}
-.sphoto-badges{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;}
+.sphoto-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(30,24,18,0.55));pointer-events:none;}
+.sphoto-badges{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none;}
 .frib{background:var(--yellow);color:white;font-size:10px;font-weight:800;letter-spacing:.06em;padding:4px 10px;border-radius:100px;box-shadow:0 2px 8px rgba(0,0,0,.2);}
 .vrib{background:var(--green);color:white;font-size:10px;font-weight:800;padding:4px 10px;border-radius:100px;box-shadow:0 2px 8px rgba(0,0,0,.2);}
 .sbody{padding:14px 16px 16px;}
@@ -431,7 +431,7 @@ body{background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);min-
 <div class="dsecret" id="d-secret-box" style="position:relative">
   <div class="dseclbl">Insider directions</div>
   <div class="dsectxt" id="dsec"></div>
-  <div id="d-lock-overlay" style="position:absolute;inset:0;background:rgba(238,245,239,0.85);border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(2px)">
+  <div id="d-lock-overlay" style="position:absolute;inset:0;background:rgba(238,245,239,0.85);border-radius:14px;display:none;flex-direction:column;align-items:center;justify-content:center;gap:8px;backdrop-filter:blur(2px)">
     <span style="font-size:22px">🔒</span>
     <span style="font-size:12px;font-weight:800;color:var(--green)">Gem Pass required</span>
     <button onclick="openPricing()" style="background:var(--orange);color:white;border:none;border-radius:100px;padding:8px 18px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;margin-top:4px">Unlock for $6.99/mo</button>
@@ -537,7 +537,7 @@ const EVENTS=[
   {id:6,spot:"Silver Trumpet",emoji:"🎷",title:"Pre-Show Dinner Package",desc:"Three course dinner timed perfectly before a Segerstrom Center show. The kitchen knows the curtain time and gets you out. Not listed on their website.",date:"Show nights",time:"5:30pm",price:65,left:8,vegan:false,tag:"Almost Gone",photo:"https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=600&q=80"},
 ];
 
-const S={city:"Newport Beach",filter:"All",vegan:false,saved:new Set(),detail:null,plan:"monthly",subscribed:false};
+const S={city:"Newport Beach",filter:"All",vegan:false,saved:new Set(),detail:null,plan:"monthly",subscribed:true};
 
 
 // ════════════════════
