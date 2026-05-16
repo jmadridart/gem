@@ -855,25 +855,26 @@ const PRESET_CITIES = [
   {name:"Los Angeles",emoji:"🌴"},
 ];
 
-function renderCityList(filter){
+function renderCityList(){
   const el=document.getElementById('cplist');
   if(!el) return;
-  const q=(filter||'').trim().toLowerCase();
-  const matches = q ? PRESET_CITIES.filter(c=>c.name.toLowerCase().includes(q)) : PRESET_CITIES;
-  let html = matches.map(c=>`
-    <div class="cpi ${c.name===S.city?'on':''}" onclick="pickCity('${c.name}')">
+  const cities=[
+    {name:"Newport Beach",emoji:"🏄"},
+    {name:"Huntington Beach",emoji:"🌊"},
+    {name:"Laguna Beach",emoji:"🌅"},
+    {name:"Costa Mesa",emoji:"🎷"},
+    {name:"Los Angeles",emoji:"🌴"},
+  ];
+  el.innerHTML = cities.map(c=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-radius:12px;cursor:pointer;font-size:16px;font-weight:700;color:${c.name===S.city?'var(--green)':'var(--t2)'};background:${c.name===S.city?'var(--gbg)':'transparent'};margin:2px 8px;transition:all .15s;"
+    onclick="pickCity('${c.name}')"
+    onmouseover="this.style.background='var(--gbg)'"
+    onmouseout="this.style.background='${c.name===S.city?'var(--gbg)':'transparent'}'">
       <span>${c.emoji} ${c.name}</span>
-      <span style="font-weight:800;color:${c.name===S.city?'var(--green)':'var(--t3)'}">${c.name===S.city?'✓':'→'}</span>
+      <span style="font-size:14px">${c.name===S.city?'✓':'›'}</span>
     </div>`).join('');
-  if(q){
-    const typed = (document.getElementById('city-search')||{}).value||filter||'';
-    if(typed && !PRESET_CITIES.find(c=>c.name.toLowerCase()===q)){
-      html += `<div class="cpi" onclick="pickCity('${typed}')"><span>🔍 Explore "${typed}"</span><span style="color:var(--t3);font-size:12px">→</span></div>`;
-    }
-  }
-  el.innerHTML = html || '<div style="text-align:center;padding:30px;font-size:13px;color:var(--t3)">No cities found</div>';
 }
-function filterCities(){renderCityList(document.getElementById('city-search')?.value||'');}
+function filterCities(){renderCityList();}
 function pickCity(c){
   S.city=c;
   S.filter='All';
@@ -891,7 +892,7 @@ function pickCity(c){
   // Render spots for new city
   renderSpots();
 }
-function openCP(){document.getElementById('cp').classList.add('open');const s=document.getElementById('city-search');if(s)s.value='';renderCityList('');}
+function openCP(){document.getElementById('cp').classList.add('open');renderCityList();}
 function closeCP(){document.getElementById('cp').classList.remove('open');}
 function openPricing(){document.getElementById('pricing-screen').classList.add('open');}
 function closePricing(){document.getElementById('pricing-screen').classList.remove('open');}
