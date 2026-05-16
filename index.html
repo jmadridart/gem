@@ -730,8 +730,8 @@ function renderSpotsForCity(city){
   document.getElementById('slist').innerHTML=html;
 }
 
-function renderSpots(){
-  const spots = filtered();
+function renderSpots(forceCity){
+  const spots = filtered(forceCity);
   const FREE_LIMIT = 3;
   const subscribed = S.subscribed || false;
   const visibleSpots = subscribed ? spots : spots.slice(0, FREE_LIMIT);
@@ -739,6 +739,9 @@ function renderSpots(){
   const lbl = S.vegan ? '🌱 Vegan Spots' : S.filter === 'All' ? 'All Spots' : S.filter + 's';
   const slbl = document.getElementById('slbl');
   if(slbl) slbl.textContent = lbl + ' — ' + spots.length + ' spots';
+  // Make sure city header matches
+  const cnameEl = document.getElementById('cname');
+  if(cnameEl) cnameEl.textContent = forceCity || S.city;
   if(!spots.length){
     document.getElementById('slist').innerHTML = '<div class="empty"><div class="empty-emoji">🔍</div><div class="empty-title">No spots found</div><div class="empty-sub">Try a different filter or city</div></div>';
     return;
