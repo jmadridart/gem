@@ -479,18 +479,11 @@ body{background:var(--bg);font-family:'Nunito',sans-serif;color:var(--text);min-
 
 <!-- CITY PICKER -->
 <div id="cp">
-<div class="cph"><div class="cpt">Your City</div><button class="cpc" onclick="closeCP()">✕</button></div>
-<div style="padding:16px 20px;">
-<div style="font-size:13px;font-weight:600;color:var(--t3);margin-bottom:12px">Type any city and we'll find hidden spots there</div>
-<div class="sbar" style="margin-top:0"><span>🔍</span><input type="text" id="city-search" placeholder="e.g. Newport Beach, Austin, Miami..." oninput="filterCities()"></div>
+<div class="cph"><div class="cpt">Choose a City</div><button class="cpc" onclick="closeCP()">✕</button></div>
+<div style="padding:12px 16px 0">
+<div class="sbar" style="margin-top:0"><span>🔍</span><input type="text" id="city-search" placeholder="Search or type any city..." oninput="filterCities()" autocomplete="off"></div>
 </div>
-<div class="cpl" id="cplist">
-<div style="text-align:center;padding:30px 20px;">
-<div style="font-size:36px;margin-bottom:10px">🌍</div>
-<div style="font-family:'Lora',serif;font-size:18px;font-weight:500;color:var(--t2);margin-bottom:6px">Search your city</div>
-<div style="font-size:13px;color:var(--t3)">Start typing to find hidden spots near you</div>
-</div>
-</div>
+<div class="cpl" id="cplist"></div>
 </div>
 
 <script>
@@ -748,7 +741,7 @@ function toggleSave(id){
 }
 
 function openDetail(id){
-  const s=SPOTS.find(x=>x.id===id);if(!s)return;
+  const s=SPOTS.find(x=>x.id==id);if(!s){console.log("Spot not found:",id);return;}
   S.detail=id;
   document.getElementById('dhood').textContent=s.hood;
   const img=document.getElementById('dhero-img');
@@ -856,14 +849,32 @@ function renderMap(){
 const MAP_POS=[[52,48],[38,35],[54,52],[62,42],[40,65],[35,40],[22,55],[18,30],[42,68],[55,38],[70,25],[45,28]];
 SPOTS.forEach((s,i)=>{s.px=MAP_POS[i][0];s.py=MAP_POS[i][1];});
 
+const PRESET_CITIES = [
+  {name:"Newport Beach",emoji:"🏄"},
+  {name:"Huntington Beach",emoji:"🌊"},
+  {name:"Laguna Beach",emoji:"🌅"},
+  {name:"Costa Mesa",emoji:"🎷"},
+  {name:"Los Angeles",emoji:"🌴"},
+];
+
 function renderCityList(filter){
-  const q=(filter||'').trim();
+  const q=(filter||'').trim().toLowerCase();
   const el=document.getElementById('cplist');
-  if(!q){
-    el.innerHTML='<div style="text-align:center;padding:40px 20px"><div style="font-size:40px;margin-bottom:12px">🌍</div><div style="font-family:\'Lora\',serif;font-size:18px;font-weight:500;color:var(--t2);margin-bottom:6px">Type your city</div><div style="font-size:13px;color:var(--t3)">We\'ll find hidden spots near you</div></div>';
-    return;
+  const matches = q ? PRESET_CITIES.filter(c=>c.name.toLowerCase().includes(q)) : PRESET_CITIES;
+  let html = '';
+  if(matches.length){
+    html += matches.map(c=>`
+      <div class="cpi ${c.name===S.city?'on':''}" onclick="pickCity('${c.name}')">
+        <span>${c.emoji} ${c.name}</span>
+        ${c.name===S.city?'<span style="color:var(--green);font-weight:800">✓</span>':'<span style="font-size:12px;color:var(--t3)">→</span>'}
+      </div>`).join('');
   }
-  el.innerHTML='<div class="cpi" onclick="pickCity(\''+q+'\')"><span>'+q+'</span><span style="font-size:12px;color:var(--t3);font-weight:600">Explore →</span></div><div style="padding:14px 20px;font-size:12px;color:var(--t3);font-weight:600;border-top:1px solid var(--border)">More cities added as Gem grows 🌱</div>';
+  if(q && !PRESET_CITIES.find(c=>c.name.toLowerCase()===q)){
+    const typed = document.getElementById('city-search').value.trim();
+    html += `<div class="cpi" onclick="pickCity('${typed}')"><span>🔍 "${typed}"</span><span style="font-size:12px;color:var(--t3)">Search →</span></div>`;
+  }
+  if(!html) html = '<div style="text-align:center;padding:30px;font-size:13px;color:var(--t3)">No cities found</div>';
+  el.innerHTML = html;
 }
 function filterCities(){renderCityList(document.getElementById('city-search')?.value||'');}
 function pickCity(c){
